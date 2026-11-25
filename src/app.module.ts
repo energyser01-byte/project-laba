@@ -1,0 +1,30 @@
+import { Module } from '@nestjs/common';
+import { UsersModule } from './users/users.module.js';
+import { CarsModule } from './cars/cars.module.js';
+import { PoliciesModule } from './policies/policies.module.js';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AiModule } from './ai/ai.module.js';
+import { EmbeddingsModule } from './embeddings/embeddings.module.js';
+
+@Module({
+  imports: [
+    ...(process.env.LAB_ONLY === '1' ? [] : [
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: process.env.POSTGRES_PASSWORD,
+      database: 'insurance_78',
+      autoLoadEntities: true,
+      synchronize: true,
+    }),
+    UsersModule,
+    CarsModule,
+    PoliciesModule,
+    ]),
+    AiModule, 
+    EmbeddingsModule,
+  ],
+})
+export class AppModule {}
